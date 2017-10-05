@@ -1,5 +1,5 @@
 #!/bin/bash
-# Kali NetHunter kernel for Samsung Galaxy Note 5 / S6 / S6 Edge / S6 Edge+ build script by jcadduono
+# Samsung kernel for Samsung Galaxy Note 5 / S6 / S6 Edge / S6 Edge+ build script by jcadduono
 
 ################### BEFORE STARTING ################
 #
@@ -46,7 +46,7 @@ RDIR=$(pwd)
 VER=$(cat "$RDIR/VERSION")
 
 # directory containing cross-compile arm64 toolchain
-TOOLCHAIN=$HOME/build/toolchain/gcc-linaro-4.9-2016.02-x86_64_aarch64-linux-gnu
+TOOLCHAIN=/home/madscript/Toolchains-Compilation/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu
 
 CPU_THREADS=$(grep -c "processor" /proc/cpuinfo)
 # amount of cpu threads to use in kernel make process
@@ -69,23 +69,15 @@ ABORT "Unable to find gcc cross-compiler at location: ${CROSS_COMPILE}gcc"
 [ "$TARGET" ] || TARGET=nethunter
 [ "$1" ] && DEVICE=$1
 [ "$2" ] && VARIANT=$2
-[ "$DEVICE" ] || DEVICE=noblelte
-[ "$VARIANT" ] || VARIANT=eur
+[ "$DEVICE" ] || DEVICE=zeroflte
+[ "$VARIANT" ] || VARIANT=xx
 
-DEFCONFIG=${TARGET}_defconfig
-DEVICE_DEFCONFIG=${DEVICE}/device_defconfig
-VARIANT_DEFCONFIG=${DEVICE}/variant_${VARIANT}_defconfig
+DEFCONFIG=${TARGET}_${DEVICE}_defconfig
 
 [ -f "$RDIR/arch/$ARCH/configs/${DEFCONFIG}" ] ||
 ABORT "Config $DEFCONFIG not found in $ARCH configs!"
 
-[ -f "$RDIR/arch/$ARCH/configs/${DEVICE_DEFCONFIG}" ] ||
-ABORT "Device config $DEVICE_DEFCONFIG not found in $ARCH configs!"
-
-[ -f "$RDIR/arch/$ARCH/configs/$VARIANT_DEFCONFIG" ] ||
-ABORT "Variant config $VARIANT_DEFCONFIG not found in $ARCH configs!"
-
-export LOCALVERSION=$TARGET-$DEVICE-$VARIANT-$VER
+export LOCALVERSION=madScript-$TARGET-$DEVICE-$VARIANT-$VER
 
 CLEAN_BUILD()
 {
@@ -98,8 +90,6 @@ SETUP_BUILD()
 	echo "Creating kernel config for $LOCALVERSION..."
 	mkdir -p build
 	make -C "$RDIR" O=build "$DEFCONFIG" \
-		DEVICE_DEFCONFIG="$DEVICE_DEFCONFIG" \
-		VARIANT_DEFCONFIG="$VARIANT_DEFCONFIG" \
 		|| ABORT "Failed to set up build"
 }
 
@@ -139,3 +129,4 @@ BUILD_KERNEL &&
 INSTALL_MODULES &&
 BUILD_DTB &&
 echo "Finished building $LOCALVERSION!"
+

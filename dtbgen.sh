@@ -5,7 +5,7 @@
 RDIR=$(pwd)
 
 # directory containing cross-compile arm64 toolchain
-TOOLCHAIN=$HOME/build/toolchain/gcc-linaro-4.9-2016.02-x86_64_aarch64-linux-gnu
+TOOLCHAIN=/home/madscript/Toolchains-Compilation/gcc-linaro-4.9.4-2017.01-x86_64_aarch64-linux-gnu
 
 # device dependant variables
 PAGE_SIZE=2048
@@ -37,7 +37,7 @@ ABORT "Unable to find gcc cross-compiler at location: ${CROSS_COMPILE}gcc"
 
 [ "$1" ] && DEVICE=$1
 [ "$2" ] && VARIANT=$2
-[ "$DEVICE" ] || DEVICE=noblelte
+[ "$DEVICE" ] || DEVICE=zeroflte
 [ "$VARIANT" ] || VARIANT=eur
 
 case $DEVICE in
@@ -249,3 +249,4 @@ echo "Generating dtb.img..."
 scripts/dtbTool/dtbTool -o "$OUTDIR/dtb.img" -d "$DTBDIR/" -s $PAGE_SIZE --platform $DTBH_PLATFORM_CODE --subtype $DTBH_SUBTYPE_CODE || ABORT
 
 echo "Done."
+
